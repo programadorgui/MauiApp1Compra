@@ -7,16 +7,16 @@ public partial class ListaProduto : ContentPage
 		InitializeComponent();
 	}
 
-    private void ToolbarItem_Clicked(object sender, EventArgs e)
+    private async void ToolbarItem_Clicked(object sender, EventArgs e)
     {
 		try
 		{
 
-			Navigation.PushAsync(new Views.NovoProduto());
+			await Navigation.PushAsync(new Views.NovoProduto());
 
 		}catch(Exception ex)
 		{
-		
-		}
+		 await DisplayAlertAsync("Ops", ex.Message, "OK");
+        }
     }
 }
