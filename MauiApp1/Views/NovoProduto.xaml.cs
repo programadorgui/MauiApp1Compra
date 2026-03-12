@@ -29,7 +29,7 @@ public partial class NovoProduto : ContentPage
 
         } catch(Exception ex)
 		{
-			await DisplayAlertAsync("Ops", ex.Message, "OK");//arrumar o click salvar
+			await DisplayAlertAsync("Ops", ex.Message, "OK");
 		}
     }
 }
