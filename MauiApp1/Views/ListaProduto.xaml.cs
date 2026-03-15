@@ -1,7 +1,12 @@
+using MauiApp1.Models;
+using System.Collections.ObjectModel;
+
 namespace MauiApp1.Views;
 
 public partial class ListaProduto : ContentPage
 {
+	ObservableCollection<Produto> lista; 
+
 	public ListaProduto()
 	{
 		InitializeComponent();
