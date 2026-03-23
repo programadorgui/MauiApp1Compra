@@ -16,9 +16,16 @@ public partial class ListaProduto : ContentPage
 
 	protected  async override void OnAppearing()
 	{
-		List<Produto> tmp = await App.Db.Getall();
+		try
+		{
+			List<Produto> tmp = await App.Db.Getall();
 
-		tmp.ForEach( i  => lista.Add(i));
+			tmp.ForEach(i => lista.Add(i));
+		}
+		catch (Exception ex)
+		{
+			await DisplayAlertAsync("Ops", ex.Message, "OK");
+		}
 
 	}//mecanismo paralelo de um construtor
 
@@ -37,13 +44,19 @@ public partial class ListaProduto : ContentPage
 
     private async void Txt_seach_TextChanged(object sender, TextChangedEventArgs e)
     {
-		string q = e.NewTextValue;
+		try
+		{
+			string q = e.NewTextValue;
 
-		List<Produto> tmp = await App.Db.Search(q);
+			List<Produto> tmp = await App.Db.Search(q);
 
-		lista.Clear();
+			lista.Clear();
 
-        tmp.ForEach(i => lista.Add(i));
+			tmp.ForEach(i => lista.Add(i));
+			}catch(Exception ex)
+		{
+			await DisplayAlertAsync("Ops", ex.Message, "OK");
+        }
     }
 
     private  void ToolbarItem_Clicked_1(object sender, EventArgs e)
@@ -56,8 +69,45 @@ public partial class ListaProduto : ContentPage
 		DisplayAlertAsync ("Total dos produtos ", msg, "OK");
     }
 
-    private void MenuItem_Clicked(object sender, EventArgs e)
+    private async void MenuItem_Clicked(object sender, EventArgs e)
     {
+		try
+		{
+			MenuItem selecionado = sender as MenuItem;
 
+			Produto p = selecionado.BindingContext as Produto;// item do objeto que era que era o item em questoa conseguindo resgatar
+
+			bool confirm = await DisplayAlertAsync("Confirma?", $"Remover Produto{p.Descricao}?", "Sim", "Não");
+
+			if (confirm)
+			{
+				await App.Db.Delete(p.Id);
+				lista.Remove(p);
+            }
+        }
+		catch(Exception ex)
+		{
+			 await DisplayAlertAsync("Ops",ex.Message, "OK");
+        }
+    }
+
+    private void lst_produtos_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+    {
+		try{
+
+			Produto p = e.SelectedItem as Produto;
+
+
+			Navigation.PushAsync( new Views.EditarProduto
+			{
+					BindingContext = p,
+
+            });
+
+        }
+        catch(Exception ex)
+		{
+			DisplayAlertAsync("Ops", ex.Message, "OK");
+        }
     }
 }
